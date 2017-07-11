@@ -25,16 +25,54 @@ docker network create \
 # 3. Add services to Swarm cluster
 [Add services to the swarm using the included docker-compose file](https://docs.docker.com/compose/swarm/).
 or
+
+To see a list of nodes in the swarm, and their hostnames:
+`docker node ls`
+
+docker service create \
+  --network mordor \
+  --name service_b \
+  --hostname service_b \
+  --detach=false \
+  --constraint 'node.hostname == aaron-OptiPlex-980' \
+  aaronmartins/service_b
+
+docker service create \
+  --network mordor \
+  --name service_a \
+  --hostname service_a \
+  --detach=false \
+  --constraint 'node.hostname == moby' \
+  --mount type=volume,source=logs,destination=/tmp/logs \
+  aaronmartins/service_a
+
+Constrain each service onto a different node (physical machine) so we make sure to talk across the network.
+`node.hostname`
+
+Verify with:
+When you do a "docker service ps {service name}" it should spit out a tabulated list, with the node field being the 4th column.
+
+docker service create \
+  --name service_b \
+  --hostname service_b \
+  --detach=false \
+  --constraint 'node.hostname == aaron-OptiPlex-980' \
+  aaronmartins/service_b
+
 ```
 docker service create \
-  --network the-shire \
-  --hostname service_a \
   --name service_a \
-  --no-healthcheck=true \
-  --restart-condition="none" \
-  -v ${PWD}/logs:/tmp/logs
+  --detach=false \
+  --constraint 'node.hostname == docker-2gb-sfo2-01' \
+  --mount type=volume,source=logs,destination=/tmp/logs \
   aaronmartins/service_a
 ```
+
+Created a droplet on DO
+Opened ports for ufw:
+https://www.digitalocean.com/community/tutorials/how-to-configure-the-linux-firewall-for-docker-swarm-on-ubuntu-16-04
+
+
 
 `docker service create --network the-shire --hostname service_b aaronmartins/service_b`
 
