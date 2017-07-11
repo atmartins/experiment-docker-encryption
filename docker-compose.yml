@@ -1,0 +1,19 @@
+version: '3'
+
+# These two services are both part of the same Docker network, and so they can
+# address each-other.
+services:
+  service_a:
+    image: aaronmartins/service_a
+    network: the-shire
+    depends_on:
+      - service_b
+
+  # This service can be reached at the hostname "service_b" if another container
+  # is part of the same Docker network.
+  #
+  # If a service is running inside this container, it's port is accessible
+  # within this Docker network, e.g. service_b:80
+  service_b:
+    image: aaronmartins/service_b
+    network: the-shire

@@ -1,0 +1,11 @@
+{
+  "name": "test_encrypted_docker_overlay_network",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Aaron Martins <me@aaromartins.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
