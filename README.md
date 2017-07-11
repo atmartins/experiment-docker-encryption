@@ -18,10 +18,25 @@ docker network create \
   --opt encrypted=true \
   the-shire
 ```
-
+docker network create \
+  --driver overlay \
+  mordor
 
 # 3. Add services to Swarm cluster
 [Add services to the swarm using the included docker-compose file](https://docs.docker.com/compose/swarm/).
+or
+```
+docker service create \
+  --network the-shire \
+  --hostname service_a \
+  --name service_a \
+  --no-healthcheck=true \
+  --restart-condition="none" \
+  -v ${PWD}/logs:/tmp/logs
+  aaronmartins/service_a
+```
+
+`docker service create --network the-shire --hostname service_b aaronmartins/service_b`
 
 The included docker-compose file declares each service to use our encrypted overlay network "the-shire".
 
