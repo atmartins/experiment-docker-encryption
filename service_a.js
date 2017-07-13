@@ -1,25 +1,20 @@
-const http = require('http');
-const winston = require('winston');
-winston.add(winston.transports.File, { filename: 'logs/logfile.log' });
+const express = require('express');
+const request = require('request');
+const app = express();
 
-var options = {
-  host: 'service_b',
-  port: 80,
-  path: '/',
-  method: 'GET'
-};
-
-setInterval(() => {
-  http.request(options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      // log response from service_b, to prove we were able to talk to it.
-      console.log('BODY: ' + chunk);
-      winston.log('info', 'BODY: ' + chunk);
-    });
-  })
-  .on('error', function(err) {
-    console.log(err);
-    winston.log('error', err);
+app.get('/', function (req, res) {
+  request('http://service_b:8090', function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the HTML for the Google homepage.
+    res.send("(v4) From service b: " + body);
   });
-}, 2000);
+});
+
+app.get('/alive', function (req, res) {
+  res.send('Service A is alive! (v4)');
+});
+
+app.listen(8089, function () {
+  console.log('service a on port 8089!')
+});

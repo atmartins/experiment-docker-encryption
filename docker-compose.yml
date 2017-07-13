@@ -5,15 +5,29 @@ version: '3'
 services:
   service_a:
     image: aaronmartins/service_a
-    network: the-shire
+    volumes:
+      - $PWD/logs:/tmp/logs
+    ports:
+      - 80:80
+    # networks:
+    #   - mordor
     depends_on:
       - service_b
 
   # This service can be reached at the hostname "service_b" if another container
-  # is part of the same Docker network.
+  # is part of the same Docker networks.
   #
   # If a service is running inside this container, it's port is accessible
-  # within this Docker network, e.g. service_b:80
+  # within this Docker networks, e.g. service_b:80
   service_b:
     image: aaronmartins/service_b
-    network: the-shire
+    hostname: service_b
+    # networks:
+    #   - mordor
+    volumes:
+      - $PWD/logs:/tmp/logs
+
+# networks:
+#   mordor:
+#     external:
+#       name: mordor
